@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: user-center
@@ -10,3 +9,8 @@ spring:
     password: 950827
 server:
   port: 8080
+
+mybatis-plus:
+  configuration:
+    # 解决 mybatis-plus 框架中 “ Unknown column 'user_account' in 'fieldlist'”
+    map-underscore-to-camel-case: false
