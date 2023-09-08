@@ -1,6 +1,6 @@
 package com.example.usercenterbackend.service;
 
-import com.example.usercenterbackend.model.User;
+import com.example.usercenterbackend.model.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

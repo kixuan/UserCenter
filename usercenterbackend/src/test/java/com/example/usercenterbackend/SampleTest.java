@@ -1,7 +1,7 @@
 package com.example.usercenterbackend;
 
 import com.example.usercenterbackend.Mapper.UserMapper;
-import com.example.usercenterbackend.model.User;
+import com.example.usercenterbackend.model.domain.User;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

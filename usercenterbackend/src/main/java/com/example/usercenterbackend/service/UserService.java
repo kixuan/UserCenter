@@ -1,7 +1,9 @@
 package com.example.usercenterbackend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.usercenterbackend.model.User;
+import com.example.usercenterbackend.model.domain.User;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author 醒酒器
@@ -12,11 +14,30 @@ public interface UserService extends IService<User> {
 
 
     /**
-     * 用户注释
-     * @param userAccount 用户账户
-     * @param userPassword 用户密码
+     * 用户注册
+     *
+     * @param userAccount   用户账户
+     * @param userPassword  用户密码
      * @param checkPassword 校验密码
      * @return 新用户 id
      */
-    long userRegister(String userAccount, String userPassword, String checkPassword);
+    Long userRegister(String userAccount, String userPassword, String checkPassword);
+
+    /**
+     * 用户登录
+     *
+     * @param userAccount
+     * @param userPassword
+     * @param request
+     * @return
+     */
+    User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+    /**
+     * 用户脱敏
+     *
+     * @param originUser
+     * @return
+     */
+    User getSafetyUser(User originUser);
 }
