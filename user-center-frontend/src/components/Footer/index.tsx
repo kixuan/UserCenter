@@ -1,6 +1,6 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
-import {SYSTEN_LOGO} from "@/constants";
+import {SYSTEM_LOGO} from "@/constants";
 
 const Footer: React.FC = () => {
   const defaultMessage = '炫仔技术部出品';
@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
           key: 'Blog',
           title: '炫仔博客',
           // 注意这里的SYSTEN_LOGO不要用单引号引起来，不然被解析成字符串了
-          href: SYSTEN_LOGO,
+          href: SYSTEM_LOGO,
           blankTarget: true,
         },
         {

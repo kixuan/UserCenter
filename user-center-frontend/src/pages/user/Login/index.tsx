@@ -6,15 +6,14 @@ import {
 } from '@ant-design/icons';
 import {
   LoginForm,
-  ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 // @ts-ignore
-import { history, useModel } from 'umi';
+import {history, Link, useModel} from 'umi';
 import styles from './index.less';
-import {PLANET_LINK, SYSTEN_LOGO} from "@/constants";
+import {PLANET_LINK, SYSTEM_LOGO} from "@/constants";
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -30,16 +29,6 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      await setInitialState((s: any) => ({
-        ...s,
-        currentUser: userInfo,
-      }));
-    }
-  };
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
@@ -50,7 +39,7 @@ const Login: React.FC = () => {
       if (user) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
+        // await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
         const { query } = history.location;
@@ -70,7 +59,7 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img alt="logo" src={SYSTEN_LOGO} />}
+          logo={<img alt="logo" src={SYSTEM_LOGO} />}
           title="炫仔博客"
           subTitle={'炫仔博客 是❀🦁最具影响力的 Web 设计规范'}
           initialValues={{
@@ -95,7 +84,8 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'账号呢？'}
+                // TODO 前端优化，账号重复提示
+                placeholder={'账号呢？注意账号不能重复，不然后台找数据会报错'}
                 rules={[
                   {
                     required: true,
@@ -130,9 +120,7 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
+            <Link to="/user/register">新用户注册</Link>
             <a
               style={{
                 float: 'right',
