@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
       links={[
         {
           key: 'Blog',
-          title: '炫仔博客111',
+          title: '炫仔博客',
           // 注意这里的SYSTEN_LOGO不要用单引号引起来，不然被解析成字符串了
           href: SYSTEN_LOGO,
           blankTarget: true,

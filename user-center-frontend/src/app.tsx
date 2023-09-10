@@ -3,10 +3,13 @@ import RightContent from '@/components/RightContent';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
+// @ts-ignore
 import type { RunTimeLayoutConfig } from 'umi';
+// @ts-ignore
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+// @ts-ignore
 import {RequestConfig} from "@@/plugin-request/request";
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -58,6 +61,7 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
+// @ts-ignore
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   // @ts-ignore
   return {
@@ -101,7 +105,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               enableDarkTheme
               settings={initialState?.settings}
               onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
+                setInitialState((preInitialState: any) => ({
                   ...preInitialState,
                   settings,
                 }));

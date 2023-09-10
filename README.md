@@ -114,7 +114,7 @@
    3. 在测试用户权限的search的时候，要先测试login登录获得一个session，才能凭借这个session测试search，看是不是管理员，能不能进行查询
 
 
-### 一些bug：
+### 一些bug
 
 1. 运行不起来，一直出现**各种Bean没注入**的错误——查看applicaition是否是小绿叶，没有的话说明没有被加载成spring的加载类，需要重新加入（[IDEA创建application.yml不是小绿叶图标（亲测有用）_idea application.yml_滑稽的鼠标的博客-CSDN博客](https://blog.csdn.net/weixin_43085797/article/details/106333243#:~:text=1、File >>Project Structure 将项目关联到spring中 2、File >>Project,Structure 将项目resources文件变成配置文件夹 选中java文件夹，点击Sources，将java文件夹变成下图所示，这样才能在java这个文件夹里面新建java.class 3、添加application.yml 4、添加启动类 在启动类上加%40SpringBootApplication注解提升没有这个包，点击下载 完美解决，application.yml变成绿叶了)）
 
@@ -124,7 +124,7 @@
 3. Create Request in HTTP Client测试出现**status：415 --》Accept改为Content-Type**，对应POST请求
    ![image-20230910091608531](E:\Project\YpProject\userCenter\README.assets\image-20230910091608531.png)
 
-### 操作tips：
+### 操作tip
 
 1. 写完service的函数后，在函数上面直接/**＋回车就可以快速生成注释
    ![image-20230908095808763](E:\Project\YpProject\userCenter\用户中心.assets\image-20230908095808763.png)
@@ -139,6 +139,17 @@
 6. 在serviceimpl中写好了方法，再加个@Override就可以直接拉到service中
 9. 常量可以专门放在一个包里面（如果是controller、service都要用的那种）
    <img src="E:\Project\YpProject\userCenter\README.assets\image-20230910103126371.png" alt="image-20230910103126371" style="zoom:67%;" />
+10. 重构快捷键：shift+f6（不是这也不好按啊，机械键盘还是要两只手才按的到(〃＞目＜)
+
+### 前端步骤
+
+1. 设置全局常量（也是新建一个ts文件啦
+2. 首页修改一些页面信息
+   1. src/components/Footer/index.tsx   ——修改底部版权信息
+   2. src/pages/user/login ——修改logo_url、标题、删除其他的登录方式、修改登录信息
+   3. 对接后台的接口——src/services/ant-design-pro/typings.d.ts修改LoginParams和后端一样，src/services/ant-design-pro/api.ts修改请求地址，config/proxy.ts配置代理地址（注意本地是http不是https）
+   4. 后端的application.yml 指定接口全局 api
+   5. 如果f12看到login的请求是`http://locolhost:8080/api/user/login`就对噜！！
 
 ## 没解决的问题
 
