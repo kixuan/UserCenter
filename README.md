@@ -91,15 +91,43 @@
 
 ## 第三节：下
 
-## 后端步骤
+### 后端步骤
+
+1. 用户登录逻辑
+   1. 和注册逻辑类似
+   2. 用setAttribute记录用户的登录状态
+2. 用户脱敏逻辑
+   1. 完全可以新建一个函数，因为很多地方用得到
+   2. 去除密码等个人信息
+3. 新建request包
+   1. 在model底下，因为本质还是实体类
+   2. 这么做的好处：清晰、确保参数的合法性、减少参数数量、易于扩展、符合面向对象逻辑
+   3. 为什么要序列化：将对象的状态转换为字节流或其他数据格式的过程，以便将其保存到文件、传输到网络或在不同系统之间进行交互 ---》数据持久化、跨平台、安全性
+      <img src="E:\Project\YpProject\userCenter\README.assets\image-20230910101716098.png" alt="image-20230910101716098" style="zoom:67%;" />
+4. 、进行测试
+   1. idea自带测试工具，生成的测试在临时文件里面
+   2. 感觉还挺好用的（主要是不用自己手敲url就比火狐方便
+      <img src="E:\Project\YpProject\userCenter\README.assets\image-20230910102713710.png" alt="image-20230910102713710" style="zoom:67%;" />
+5. 用户鉴权
+   1. 添加userRole可以直接再用MybatisX插件生成代码，记得**改回UserMapper.xml的namespace和type** --todo：多去研究一下Mybatis的东西，感觉方便好多
+   2. 运行前要移除之前的登录态，把target删掉
+   3. 在测试用户权限的search的时候，要先测试login登录获得一个session，才能凭借这个session测试search，看是不是管理员，能不能进行查询
 
 
+### 一些bug：
 
-## 操作tips：
+1. 运行不起来，一直出现**各种Bean没注入**的错误——查看applicaition是否是小绿叶，没有的话说明没有被加载成spring的加载类，需要重新加入（[IDEA创建application.yml不是小绿叶图标（亲测有用）_idea application.yml_滑稽的鼠标的博客-CSDN博客](https://blog.csdn.net/weixin_43085797/article/details/106333243#:~:text=1、File >>Project Structure 将项目关联到spring中 2、File >>Project,Structure 将项目resources文件变成配置文件夹 选中java文件夹，点击Sources，将java文件夹变成下图所示，这样才能在java这个文件夹里面新建java.class 3、添加application.yml 4、添加启动类 在启动类上加%40SpringBootApplication注解提升没有这个包，点击下载 完美解决，application.yml变成绿叶了)）
+
+2. 在使用Create Request in HTTP Client测试的时候出现**200-响应内容为空**的错误：查看传参字段是否和Request字段是否相同，这次是没有同意采用驼峰命名法导致字段不一样
+   ![image-20230910091245858](E:\Project\YpProject\userCenter\README.assets\image-20230910091245858.png)
+
+3. Create Request in HTTP Client测试出现**status：415 --》Accept改为Content-Type**，对应POST请求
+   ![image-20230910091608531](E:\Project\YpProject\userCenter\README.assets\image-20230910091608531.png)
+
+### 操作tips：
 
 1. 写完service的函数后，在函数上面直接/**＋回车就可以快速生成注释
    ![image-20230908095808763](E:\Project\YpProject\userCenter\用户中心.assets\image-20230908095808763.png)
-
 2. private static final  可以先输入prsf，按下enter快速生成
 3. 在service多写了参数之后，点击左侧的R可以快速在serviceimpl中添加这个参数
    ![image-20230908100947192](E:\Project\YpProject\userCenter\用户中心.assets\image-20230908100947192.png)
@@ -107,6 +135,10 @@
 5. 写控制器函数快速填参：插件Auto filling Java call arguments，鼠标放在括号中间alt+enter
    ![image-20230908103046197](E:\Project\YpProject\userCenter\用户中心.assets\image-20230908103046197.png)
 6. `@Data`注解作用：简化一般实体类的get, set, toString，construct（构造函数）等的书写，简洁化代码。@Data≈@Getter + @Setter + toString() + equals等方法
+6. ctrl+B 快速进入
+6. 在serviceimpl中写好了方法，再加个@Override就可以直接拉到service中
+9. 常量可以专门放在一个包里面（如果是controller、service都要用的那种）
+   <img src="E:\Project\YpProject\userCenter\README.assets\image-20230910103126371.png" alt="image-20230910103126371" style="zoom:67%;" />
 
 ## 没解决的问题
 
@@ -121,3 +153,5 @@
 
    在项目结构的模块只添加后端文佳加为模块，成功，【项目】也显示
    <img src="E:\Project\YpProject\userCenter\用户中心.assets\image-20230904133205100-16938055287873.png" alt="image-20230904133205100" style="zoom:67%;" />
+
+3. Slf4j怎么用、、、 Serializable 序列化什么用

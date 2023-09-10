@@ -16,6 +16,7 @@ import java.util.Date;
 @Getter
 @TableName(value = "user")
 public class User implements Serializable {
+    // 这两行什么用？
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
@@ -26,15 +27,15 @@ public class User implements Serializable {
     /**
      * 用户昵称
      */
-    private String username;
+    private String userName;
     /**
      * 账号
      */
-    private String useraccount;
+    private String userAccount;
     /**
      * 用户头像
      */
-    private String avatarurl;
+    private String avatarUrl;
     /**
      * 性别
      */
@@ -42,7 +43,7 @@ public class User implements Serializable {
     /**
      * 密码
      */
-    private String userpassword;
+    private String userPassword;
     /**
      * 邮箱
      */
@@ -50,7 +51,7 @@ public class User implements Serializable {
     /**
      * 状态 0-正常
      */
-    private Integer userstatus;
+    private Integer userStatus;
     /**
      * 电话
      */
@@ -58,15 +59,19 @@ public class User implements Serializable {
     /**
      * 创建时间
      */
-    private Date createtime;
+    private Date createTime;
     /**
      * 更新时间
      */
-    private Date updatetime;
+    private Date updateTime;
     /**
      * 是否删除
      */
     @TableLogic
-    private Integer isdelete;
+    private Integer isDelete;
+    /**
+     * 用户权限（用户0，管理员1）
+     */
+    private Integer userRole;
 
 }

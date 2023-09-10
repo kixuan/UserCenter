@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.usercenterbackend.constant.UserConstant.USER_LOGIN_STATE;
+
 /**
  * @author 醒酒器
  * @description 针对表【user(用户表)】的数据库操作Service实现
@@ -29,7 +31,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private UserMapper userMapper;
     private final String SALT = "kixuan";
-    private static final String USER_LOGIN_STATE = "userLoginState";
 
     @Override
     public Long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -65,8 +66,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String verifyPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes(StandardCharsets.UTF_8));
         // 3. 向数据库插入用户数据
         User user = new User();
-        user.setUseraccount(userAccount);
-        user.setUserpassword(verifyPassword);
+        user.setUserAccount(userAccount);
+        user.setUserPassword(verifyPassword);
         int res = userMapper.insert(user);
         if (res < 0) {
             return null;
@@ -75,6 +76,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     }
 
+    /**
+     * 用户登录
+     *
+     * @param userAccount
+     * @param userPassword
+     * @param request
+     * @return
+     */
     @Override
     // request为了拿到session，记录用户的登录状态
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
@@ -114,19 +123,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return user;
     }
 
+    /**
+     * 用户脱敏
+     *
+     * @param originUser
+     * @return
+     */
+    @Override
     public User getSafetyUser(User originUser) {
         User safetyUser = new User();
-        // password和isdelete不返回给前端
+        // password和isDelete不返回给前端
         safetyUser.setId(originUser.getId());
-        safetyUser.setUsername(originUser.getUsername());
-        safetyUser.setUseraccount(originUser.getUseraccount());
-        safetyUser.setAvatarurl(originUser.getAvatarurl());
+        safetyUser.setUserName(originUser.getUserName());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
         safetyUser.setGender(originUser.getGender());
         safetyUser.setEmail(originUser.getEmail());
-        safetyUser.setUserstatus(originUser.getUserstatus());
+        safetyUser.setUserStatus(originUser.getUserStatus());
         safetyUser.setPhone(originUser.getPhone());
-        safetyUser.setCreatetime(originUser.getCreatetime());
-        safetyUser.setUpdatetime(originUser.getUpdatetime());
+        safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setCreateTime(originUser.getCreateTime());
+        safetyUser.setUpdateTime(originUser.getUpdateTime());
         return safetyUser;
     }
 

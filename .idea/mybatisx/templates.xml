@@ -74,6 +74,7 @@
               </list>
             </option>
             <option name="templatesName" value="mybatis-plus3" />
+            <option name="useActualColumns" value="true" />
           </GenerateConfig>
         </option>
         <option name="moduleName" value="usercenterbackend" />

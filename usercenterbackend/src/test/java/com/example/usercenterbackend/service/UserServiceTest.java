@@ -16,11 +16,11 @@ class UserServiceTest {
     @Test
     public void testAddUser() {
         User user = new User();
-        user.setUsername("xxz");
-        user.setUseraccount("132");
-        user.setAvatarurl("baidu.com");
+        user.setUserName("xxz");
+        user.setUserAccount("132");
+        user.setAvatarUrl("baidu.com");
         user.setGender(0);
-        user.setUserpassword("123");
+        user.setUserPassword("123");
         user.setPhone("123123");
         user.setEmail("123");
 
