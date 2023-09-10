@@ -8,8 +8,14 @@ spring:
     url: jdbc:mysql://localhost:3307/yupi
     username: root
     password: 950827
+  # 设置session失效时间
+  session:
+    timeout: 86400
 server:
   port: 8080
+  #  为了配合前端的接口，在前面都加一个/api
+  servlet:
+      context-path: /api
 
 mybatis-plus:
   configuration:
