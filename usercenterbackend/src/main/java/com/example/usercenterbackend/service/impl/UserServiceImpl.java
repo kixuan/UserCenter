@@ -131,6 +131,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public User getSafetyUser(User originUser) {
+        if (originUser == null) {
+            return null;
+        }
         User safetyUser = new User();
         // password和isDelete不返回给前端
         safetyUser.setId(originUser.getId());

@@ -58,6 +58,21 @@ public class UserController {
         return userService.userLogin(userAccount, userPassword, request);
     }
 
+    @GetMapping("/current")
+    public User getcurrentUsers(HttpServletRequest request) {
+        Object object = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) object;
+        if (currentUser == null) {
+            return null;
+        }
+        // 啊这里为什么要先get id又get-user啊
+        Long userId = currentUser.getId();
+        // TODO 检验用户是否合法
+        User user = userService.getById(userId);
+        return userService.getSafetyUser(user);
+    }
+
+
     @GetMapping("/search")
     public List<User> searchUsers(String username, HttpServletRequest request) {
         if (isAdmin(request)) {
@@ -92,7 +107,6 @@ public class UserController {
      * @return
      */
     private boolean isAdmin(HttpServletRequest request) {
-        // 仅管理员可查询
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User user = (User) userObj;
         return user == null || user.getUserRole() != ADMIN_ROLE;
