@@ -73,5 +73,9 @@ public class User implements Serializable {
      * 用户权限（用户0，管理员1）
      */
     private Integer userRole;
+    /**
+     * 星球编号
+     */
+    private String planetCode;
 
 }

@@ -33,32 +33,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final String SALT = "kixuan";
 
     @Override
-    public Long userRegister(String userAccount, String userPassword, String checkPassword) {
+    public Long userRegister(String userAccount, String userPassword, String checkPassword, String planetCode) {
         // 1.校验用户的账户、密码、校验密码，是否符合要求
         // 1.1.非空校验
         // 1.2. 账户长度不小于4位
         // 1.3. 密码就不小于8位
+        // 1.4  星球账号不能大于5位
         if ((StringUtils.isAnyBlank(userAccount, userPassword, checkPassword))
                 || (userAccount.length() < 4)
-                || (userPassword.length() < 8)) {
+                || (userPassword.length() < 8)
+                || (planetCode.length() > 5)) {
             return null;
         }
 
-        // 1.4. 账户不包含特殊字符
+        // 1.5 账户不包含特殊字符
         String validRule = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%…… &*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validRule).matcher(userAccount);
         // 如果包含非法字符，则返回
         if (matcher.find()) {
             return null;
         }
-        // 1.5. 密码和校验密码相同
+        // 1.6 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
             return null;
         }
-        // 1.6. 账户不能重复
+        // 1.7 账户不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         Long count = userMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            return null;
+        }
+        // 1.8 星球账号不能重复
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("planetCode", planetCode);
+        count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
             return null;
         }
@@ -68,6 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(verifyPassword);
+        user.setPlanetCode(planetCode);
         int res = userMapper.insert(user);
         if (res < 0) {
             return null;
@@ -145,9 +155,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safetyUser.setUserStatus(originUser.getUserStatus());
         safetyUser.setPhone(originUser.getPhone());
         safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setPlanetCode(originUser.getPlanetCode());
         safetyUser.setCreateTime(originUser.getCreateTime());
         safetyUser.setUpdateTime(originUser.getUpdateTime());
         return safetyUser;
+    }
+
+    @Override
+    public int userLogout(HttpServletRequest request) {
+        // 直接把session里面的值给删掉就算登出了
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return 1;
     }
 
 }
