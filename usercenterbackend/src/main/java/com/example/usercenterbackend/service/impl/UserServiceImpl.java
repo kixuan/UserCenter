@@ -3,6 +3,8 @@ package com.example.usercenterbackend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.usercenterbackend.Mapper.UserMapper;
+import com.example.usercenterbackend.common.ErrorCode;
+import com.example.usercenterbackend.exception.BusinessException;
 import com.example.usercenterbackend.model.domain.User;
 import com.example.usercenterbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 || (userAccount.length() < 4)
                 || (userPassword.length() < 8)
                 || (planetCode.length() > 5)) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
 
         // 1.5 账户不包含特殊字符
@@ -51,25 +53,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Matcher matcher = Pattern.compile(validRule).matcher(userAccount);
         // 如果包含非法字符，则返回
         if (matcher.find()) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 1.6 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 1.7 账户不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         Long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return null;
+            throw new BusinessException(ErrorCode.DUP_INFO);
         }
         // 1.8 星球账号不能重复
         queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("planetCode", planetCode);
         count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return null;
+            throw new BusinessException(ErrorCode.DUP_INFO);
         }
         // 2.对密码进行加密（密码千万不要直接以明文存储到数据库中）
         String verifyPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes(StandardCharsets.UTF_8));
@@ -80,7 +82,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPlanetCode(planetCode);
         int res = userMapper.insert(user);
         if (res < 0) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         return user.getId();
 
@@ -102,14 +104,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if ((StringUtils.isAnyBlank(userAccount, userPassword))
                 || (userAccount.length() < 4)
                 || (userPassword.length() < 8)) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
 
         // 账户不能包含特殊字符
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
         if (matcher.find()) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 2.加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
@@ -121,7 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 用户不存在
         if (user == null) {
             log.info("user login failed, userAccount Cannot match userPassword");
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 3.用户脱敏
         User safetyUser = getSafetyUser(user);
@@ -142,7 +144,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getSafetyUser(User originUser) {
         if (originUser == null) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         User safetyUser = new User();
         // password和isDelete不返回给前端
@@ -167,7 +169,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         request.getSession().removeAttribute(USER_LOGIN_STATE);
         return 1;
     }
-
 }
 
 
