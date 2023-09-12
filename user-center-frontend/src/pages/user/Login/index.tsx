@@ -1,22 +1,20 @@
-import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
 import {
   LockOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { Alert, message, Tabs } from 'antd';
-import React, { useState } from 'react';
-// @ts-ignore
-import {history, Link, useModel} from 'umi';
+import {Alert, Divider, message, Space, Tabs} from 'antd';
+import React, {useState} from 'react';
+import {ProFormText, LoginForm} from '@ant-design/pro-form';
+import {history, useModel} from 'umi';
+import {PLANET_LINK, SYSTEM_LOGO} from '@/constants';
+import Footer from '@/components/Footer';
+import {login} from '@/services/ant-design-pro/api';
 import styles from './index.less';
-import {PLANET_LINK, SYSTEM_LOGO} from "@/constants";
+import {Link} from "@umijs/preset-dumi/lib/theme";
+
 const LoginMessage: React.FC<{
   content: string;
-}> = ({ content }) => (
+}> = ({content}) => (
   <Alert
     style={{
       marginBottom: 24,
@@ -26,24 +24,34 @@ const LoginMessage: React.FC<{
     showIcon
   />
 );
+
 const Login: React.FC = () => {
   const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
+  const {initialState, setInitialState} = useModel('@@initialState');
+
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo?.();
+
+    if (userInfo) {
+      await setInitialState((s) => ({...s, currentUser: userInfo}));
+    }
+  };
+
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const user = await login({
-        ...values,
-        type,
-      });
+      const user = await login({...values, type});
+
       if (user) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
-        // await fetchUserInfo();
+        await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
+
         if (!history) return;
-        const { query } = history.location;
-        const { redirect } = query as {
+        const {query} = history.location;
+        const {redirect} = query as {
           redirect: string;
         };
         history.push(redirect || '/');
@@ -54,14 +62,15 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+
+  const {status, type: loginType} = userLoginState;
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img alt="logo" src={SYSTEM_LOGO} />}
-          title="炫仔博客"
-          subTitle={'炫仔博客 是❀🦁最具影响力的 Web 设计规范'}
+          logo={<img alt="logo" src={SYSTEM_LOGO}/>}
+          title="编程导航知识星球"
+          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的编程学习知识圈子</a>}
           initialValues={{
             autoLogin: true,
           }}
@@ -70,11 +79,10 @@ const Login: React.FC = () => {
           }}
         >
           <Tabs activeKey={type} onChange={setType}>
-            <Tabs.TabPane key="account" tab={'账户密码登录'} />
+            <Tabs.TabPane key="account" tab={'账号密码登录'}/>
           </Tabs>
-
           {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的账号和密码'} />
+            <LoginMessage content={'错误的账号和密码'}/>
           )}
           {type === 'account' && (
             <>
@@ -82,10 +90,9 @@ const Login: React.FC = () => {
                 name="userAccount"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined className={styles.prefixIcon} />,
+                  prefix: <UserOutlined className={styles.prefixIcon}/>,
                 }}
-                // TODO 前端优化，账号重复提示
-                placeholder={'账号呢？注意账号不能重复，不然后台找数据会报错'}
+                placeholder="请输入账号"
                 rules={[
                   {
                     required: true,
@@ -97,19 +104,18 @@ const Login: React.FC = () => {
                 name="userPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                  prefix: <LockOutlined className={styles.prefixIcon}/>,
                 }}
-                placeholder={'密码呢？'}
+                placeholder="请输入密码"
                 rules={[
                   {
                     required: true,
                     message: '密码是必填项！',
                   },
-                  //添加验证
                   {
-                    min:8,
-                    type:'string',
-                    message:'密码长度不能小于8位',
+                    min: 8,
+                    type: 'string',
+                    message: '长度不能小于 8',
                   },
                 ]}
               />
@@ -120,23 +126,25 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <Link to="/user/register">新用户注册</Link>
-            <a
-              style={{
-                float: 'right',
-              }}
-              href={PLANET_LINK}
-              // _blank就是新开一个页面啦
-              // noreferrer是一个用于<a>标签中与target="_blank"结合使用的属性。它告诉浏览器在打开链接时不要发送Referer HTTP头信息。Referer头包含了链接所在页面的URL地址，这可能会泄露一些用户隐私信息。
-              target="_blank" rel="noreferrer"
-            >
-              忘记密码 ? sorry没救了O(∩_∩)O
-            </a>
+            <Space split={<Divider type="vertical" />}>
+              <Link to="/user/register">新用户注册</Link>
+              <a
+                style={{
+                  float: 'right',
+                }}
+                href={PLANET_LINK}
+                target="_blank"
+                rel="noreferrer"
+              >
+                忘记密码
+              </a>
+            </Space>
           </div>
         </LoginForm>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 };
+
 export default Login;

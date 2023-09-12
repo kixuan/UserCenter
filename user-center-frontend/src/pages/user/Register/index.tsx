@@ -1,27 +1,20 @@
-import Footer from '@/components/Footer';
-import {register} from '@/services/ant-design-pro/api';
-import {
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormText,
-} from '@ant-design/pro-components';
+import {LockOutlined, UserOutlined,} from '@ant-design/icons';
 import {message, Tabs} from 'antd';
 import React, {useState} from 'react';
-// @ts-ignore
-import {history, useModel} from 'umi';
+import {history} from 'umi';
+import {PLANET_LINK, SYSTEM_LOGO} from '@/constants';
+import Footer from '@/components/Footer';
+import {register} from '@/services/ant-design-pro/api';
 import styles from './index.less';
-import {PLANET_LINK, SYSTEM_LOGO} from "@/constants";
+import {LoginForm, ProFormText} from '@ant-design/pro-form';
 
 const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
 
-
+  // 表单提交
   const handleSubmit = async (values: API.RegisterParams) => {
     const {userPassword, checkPassword} = values;
-    // 继续一些校验
+    // 校验
     if (userPassword !== checkPassword) {
       message.error('两次输入的密码不一致');
       return;
@@ -48,19 +41,19 @@ const Register: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
           submitter={{
             searchConfig: {
-              // 这里，改了LoginFrom的submitText，因为是已经写好的组件，首页只能通过这种方式改变
               submitText: '注册'
             }
           }}
           logo={<img alt="logo" src={SYSTEM_LOGO}/>}
-          title="炫仔知识星球"
-          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">❀🦁最好的知识圈子</a>}
+          title="编程导航知识星球"
+          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的编程学习知识圈子</a>}
           initialValues={{
             autoLogin: true,
           }}
@@ -147,4 +140,5 @@ const Register: React.FC = () => {
     </div>
   );
 };
+
 export default Register;

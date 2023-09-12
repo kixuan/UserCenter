@@ -1,4 +1,6 @@
-export const SYSTEM_LOGO = "https://th.bing.com/th/id/OIP.e_KKfhno0UQjZtR0W4QmZgHaK5?pid=ImgDet&rs=1"
+export const SYSTEM_LOGO = "https://636f-codenav-8grj8px727565176-1256524210.tcb.qcloud.la/img/logo.png";
 
-
-export const PLANET_LINK = "https://kixuan.github.io/"
+/**
+ * 知识星球文档地址
+ */
+export const PLANET_LINK = "https://docs.qq.com/doc/DUG93dVNHbVZjZXpo";

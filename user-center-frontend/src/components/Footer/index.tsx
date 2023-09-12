@@ -1,35 +1,36 @@
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-components';
-import {SYSTEM_LOGO} from "@/constants";
+import {GithubOutlined} from '@ant-design/icons';
+import {DefaultFooter} from '@ant-design/pro-layout';
+import {PLANET_LINK} from "@/constants";
 
 const Footer: React.FC = () => {
-  const defaultMessage = '炫仔技术部出品';
+  const defaultMessage = '鱼皮出品';
   const currentYear = new Date().getFullYear();
   return (
     <DefaultFooter
       copyright={`${currentYear} ${defaultMessage}`}
       links={[
         {
-          key: 'Blog',
-          title: '炫仔博客',
-          // 注意这里的SYSTEN_LOGO不要用单引号引起来，不然被解析成字符串了
-          href: SYSTEM_LOGO,
+          key: 'planet',
+          title: '知识星球',
+          href: PLANET_LINK,
           blankTarget: true,
         },
         {
-          key: '炫仔github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/kixuan',
+          key: 'codeNav',
+          title: '编程导航',
+          href: 'https://www.code-nav.cn',
           blankTarget: true,
         },
         {
-          key: 'Bilibili',
-          title: '七个b站都不够我刷',
-          href: 'https://space.bilibili.com/401580681?spm_id_from=333.1007.0.0',
+          key: 'github',
+          title: <><GithubOutlined/> 鱼皮 GitHub</>,
+          href: 'https://github.com/liyupi',
           blankTarget: true,
         },
+
       ]}
     />
   );
 };
+
 export default Footer;
