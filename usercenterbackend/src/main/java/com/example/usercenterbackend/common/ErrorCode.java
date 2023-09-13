@@ -25,6 +25,9 @@ public enum ErrorCode {
     }
 
     // 这里能不能直接@Data注解实现
+    // 不能，因为这是枚举类
+    // 因为枚举常量是有限的，每个常量都有不同的属性值，而不是通过字段赋值的方式来定义。
+    // 因此，Lombok 的 @Data 注解不能自动识别枚举类中的属性。
     public int getCode() {
         return code;
     }

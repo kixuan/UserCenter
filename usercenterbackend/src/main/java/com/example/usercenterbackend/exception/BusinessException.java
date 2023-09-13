@@ -1,11 +1,14 @@
 package com.example.usercenterbackend.exception;
 
 import com.example.usercenterbackend.common.ErrorCode;
+import lombok.Getter;
 
 // TODO 运行时异常，又称不受检查异常
+@Getter
 public class BusinessException extends RuntimeException {
-    private int code;
-    private String description;
+    private static final long serialVersionUID = 1449280272362390847L;
+    private final int code;
+    private final String description;
 
     /**
      * Constructs a new runtime exception with the specified detail message.
@@ -33,11 +36,4 @@ public class BusinessException extends RuntimeException {
         this.description = description;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }
