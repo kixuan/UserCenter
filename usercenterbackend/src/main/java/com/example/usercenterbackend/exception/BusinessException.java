@@ -4,6 +4,7 @@ import com.example.usercenterbackend.common.ErrorCode;
 import lombok.Getter;
 
 // TODO 运行时异常，又称不受检查异常
+// 自定义异常类，继承RuntimeException，用于表示应用程序中的业务异常
 @Getter
 public class BusinessException extends RuntimeException {
     private static final long serialVersionUID = 1449280272362390847L;
