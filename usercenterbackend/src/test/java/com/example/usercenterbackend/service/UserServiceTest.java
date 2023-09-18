@@ -28,7 +28,6 @@ class UserServiceTest {
         // 增加断言，ctrl+p可以查看需要的参数
         Assertions.assertEquals(true, save);
         System.out.println(user.getId());
-
     }
 
     @Test

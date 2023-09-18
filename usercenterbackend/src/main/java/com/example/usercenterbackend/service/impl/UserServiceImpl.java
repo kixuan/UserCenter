@@ -74,7 +74,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.DUP_INFO);
         }
         // 2.对密码进行加密（密码千万不要直接以明文存储到数据库中）
-        String verifyPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes(StandardCharsets.UTF_8));
+        String verifyPassword = DigestUtils.md5DigestAsHex((SALT + userPassword)
+                .getBytes(StandardCharsets.UTF_8));
         // 3. 向数据库插入用户数据
         User user = new User();
         user.setUserAccount(userAccount);
@@ -85,7 +86,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         return user.getId();
-
     }
 
     /**
@@ -97,10 +97,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
+    // TODO 改成只有一个param
     // request为了拿到session，记录用户的登录状态
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1.校验
-        // todo 修改为自定义异常
         if ((StringUtils.isAnyBlank(userAccount, userPassword))
                 || (userAccount.length() < 4)
                 || (userPassword.length() < 8)) {
@@ -114,7 +114,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 2.加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword)
+                .getBytes(StandardCharsets.UTF_8));
         // 查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);

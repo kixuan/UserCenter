@@ -78,6 +78,11 @@ const Register: React.FC = () => {
                     required: true,
                     message: '账号是必填项！',
                   },
+                  {
+                    min: 4,
+                    type: 'string',
+                    message: '长度不能小于 4',
+                  },
                 ]}
               />
               <ProFormText.Password
@@ -129,6 +134,11 @@ const Register: React.FC = () => {
                   {
                     required: true,
                     message: '星球编号是必填项！',
+                  },
+                  {
+                    max: 5,
+                    type: 'string',
+                    message: '长度不能大于 5',
                   },
                 ]}
               />

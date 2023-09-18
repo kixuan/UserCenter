@@ -37,6 +37,7 @@ public class UserController {
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
+        // todo 这个也好麻烦o，cszc都是直接用beanutils复制过去的
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
@@ -69,7 +70,7 @@ public class UserController {
         Object object = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) object;
         if (currentUser == null) {
-            throw new BusinessException(ErrorCode.PARAM_ERROR);
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
         }
         // 啊这里为什么要先get id又get-user啊
         Long userId = currentUser.getId();

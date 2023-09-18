@@ -12,7 +12,6 @@ import java.io.Serializable;
 // 实现 Serializable 就是序列化
 @Data
 public class UserLoginRequest implements Serializable {
-    // 为什么要进行序列化？
     private static final long serialVersionUID = -6615735376118984333L;
 
     private String userAccount;

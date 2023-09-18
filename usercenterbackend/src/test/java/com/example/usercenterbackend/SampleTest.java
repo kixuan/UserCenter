@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @SpringBootTest
-//@RunWith(SpringRunner.class)
+// @RunWith(SpringRunner.class)
 public class SampleTest {
 
     @Resource

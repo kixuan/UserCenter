@@ -9,6 +9,7 @@ import {BookOutlined, LinkOutlined} from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import {RequestConfig} from "@@/plugin-request/request";
 
+// 这个就是环境啦
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 /**
@@ -34,6 +35,7 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+  alert(process.env.NODE_ENV)
   const fetchUserInfo = async () => {
     try {
       return await queryCurrentUser();
