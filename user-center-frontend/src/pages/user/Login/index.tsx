@@ -65,12 +65,17 @@ const Login: React.FC = () => {
 
   const {status, type: loginType} = userLoginState;
   return (
-    <div className={styles.container}>
+    <div className={styles.container} >
       <div className={styles.content}>
         <LoginForm
+          submitter={{
+            searchConfig: {
+              submitText: '进入邦邦(●ˇ∀ˇ●)'
+            }
+          }}
           logo={<img alt="logo" src={SYSTEM_LOGO}/>}
-          title="编程导航知识星球"
-          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的编程学习知识圈子</a>}
+          title="MYGO!!!!!RINK分店"
+          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的邦邦圈子</a>}
           initialValues={{
             autoLogin: true,
           }}
@@ -113,9 +118,9 @@ const Login: React.FC = () => {
                     message: '密码是必填项！',
                   },
                   {
-                    min: 8,
+                    min: 5,
                     type: 'string',
-                    message: '长度不能小于 8',
+                    message: '长度不能小于mygo现任团员数',
                   },
                 ]}
               />
@@ -127,7 +132,7 @@ const Login: React.FC = () => {
             }}
           >
             <Space split={<Divider type="vertical" />}>
-              <Link to="/user/register">新用户注册</Link>
+              <Link to="/user/register">Staff A注册</Link>
               <a
                 style={{
                   float: 'right',
@@ -136,7 +141,7 @@ const Login: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                忘记密码
+                忘记密码，罚你再听一遍春日影
               </a>
             </Space>
           </div>

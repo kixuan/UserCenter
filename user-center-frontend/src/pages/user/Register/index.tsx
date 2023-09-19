@@ -52,8 +52,8 @@ const Register: React.FC = () => {
             }
           }}
           logo={<img alt="logo" src={SYSTEM_LOGO}/>}
-          title="编程导航知识星球"
-          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的编程学习知识圈子</a>}
+          title="MYGO!!!!!RINK分店"
+          subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的邦邦圈子</a>}
           initialValues={{
             autoLogin: true,
           }}
@@ -98,9 +98,9 @@ const Register: React.FC = () => {
                     message: '密码是必填项！',
                   },
                   {
-                    min: 8,
+                    min: 5,
                     type: 'string',
-                    message: '长度不能小于 8',
+                    message: '长度不能小于mygo现任团员数',
                   },
                 ]}
               />
@@ -117,9 +117,9 @@ const Register: React.FC = () => {
                     message: '确认密码是必填项！',
                   },
                   {
-                    min: 8,
+                    min: 5,
                     type: 'string',
-                    message: '长度不能小于 8',
+                    message: '长度不能小于mygo现任团员数',
                   },
                 ]}
               />
@@ -129,11 +129,11 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon}/>,
                 }}
-                placeholder="请输入星球编号"
+                placeholder="请输入邦邦号"
                 rules={[
                   {
                     required: true,
-                    message: '星球编号是必填项！',
+                    message: '邦邦号是必填项！',
                   },
                   {
                     max: 5,

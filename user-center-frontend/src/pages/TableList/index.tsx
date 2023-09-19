@@ -103,9 +103,9 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.RuleListItem>[] = [
     {
-      title: '规则名称',
-      dataIndex: 'name',
-      tip: 'The rule name is the unique key',
+      title: '邦邦id',
+      dataIndex: 'id',
+      tip: '邦邦id is the unique key',
       render: (dom, entity) => {
         return (
           <a
@@ -121,43 +121,35 @@ const TableList: React.FC = () => {
     },
     {
       title: '描述',
-      dataIndex: 'desc',
+      dataIndex: 'description',
       valueType: 'textarea',
     },
     {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
+      title: '粉丝数',
+      dataIndex: 'fans',
       sorter: true,
       hideInForm: true,
       renderText: (val: string) => `${val}${'万'}`,
     },
     {
       title: '状态',
-      dataIndex: 'status',
+      dataIndex: 'userStatus',
       hideInForm: true,
       valueEnum: {
-        0: {
+        1: {
           text: '关闭',
           status: 'Default',
         },
-        1: {
-          text: '运行中',
+        0: {
+          text: '正常',
           status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
         },
       },
     },
     {
-      title: '上次调度时间',
+      title: '上次更新时间',
       sorter: true,
-      dataIndex: 'updatedAt',
+      dataIndex: 'updateTime',
       valueType: 'dateTime',
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
         const status = form.getFieldValue('status');
