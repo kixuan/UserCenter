@@ -1,25 +1,25 @@
 # 用户中心
 
-时间：2023/9/14 - 2023/9/18【除部署上线】
+时间：2023/9/04 - 2023/9/19【除部署上线】
 
 ## 第一节：上
 
-### 企业做项目流程 
+### 企业做项目流程
 
 需求分析 => 设计（概要设计、详细设计）=> 技术选型 => 初始化 / 引入需要的技术 => 写 Demo => 写代码（实现业务逻辑） => 测试（单元测试）=> 代码提交 / 代码评审 => 部署=> 发布/上线
 
-### 需求分析 
+### 需求分析
 
 1. 登录 / 注册 【前后端跨域请求】
-2. 用户管理（仅管理员可见）对用户的查询或者修改 【TODO】
-3. 用户校验（ 仅星球用户 ）【❓啊意思是加星球编号还是？】
+2. 用户管理（仅管理员可见）对用户的查询或者修改
+3. 用户校验（ 仅星球用户 ）【啊意思是加星球编号还是 ==> 意思就是数据库检验是否为星球用户，不然不登录】
 
 ### 技术选型
 #### 前端
 
 三件套 + React + 组件库 Ant Design + Umi + Ant Design Pro（现成的管理系统）
 
-#### 后端【TODO：额好像都会用但是没有意识到自己在用】
+#### 后端
 
 - java
 - spring（依赖注入框架，帮助你管理 Java 对象，集成一些其他的内容）
@@ -40,12 +40,12 @@
 
 1. 初始化Ant Design Pro脚手架
    最好用14以上的版本 ，（ [开箱即用的中台前端/设计解决方案 - Ant Design Pro](https://pro.ant.design/zh-CN/)  ）
-    按照焱总的笔记使用yarn create umi userCenter安装没成功
-    <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230903231340605.png" alt="image-20230903231340605" style="zoom:67%;" />
+   按照焱总的笔记使用yarn create umi userCenter安装没成功
+   <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230903231340605.png" alt="image-20230903231340605" style="zoom:67%;" />
 
-    直接使用：pro create user-center-frontend✔
-    <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230903231257411.png" alt="image-20230903231257411" style="zoom:67%;" />
-   
+   直接使用：pro create user-center-frontend✔
+   <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230903231257411.png" alt="image-20230903231257411" style="zoom:67%;" />
+
 ``` 终端
    npm i @ant-design/pro-cli -g
    pro create 文件名   --选umi@3＆simple
@@ -56,7 +56,7 @@
 2. 项目瘦身  【删页面文件的同时记得路由也要删掉】
 
    1. 删除国际化：执行 `i18n-remove `脚本
-   2. 删除src/locales 
+   2. 删除src/locales
    3. 删除rc/e2e ：测试流程定义
    4. src/services/swagger：后台接口程序定义
    5. config/oneapi.json：项目接口
@@ -103,7 +103,7 @@
    (5, 'Billie', 24, 'test5@baomidou.com');
    ```
 
-   
+
 
 3. 引入`mybatisbplus`依赖： pom.xml【记得刷新】
 
@@ -147,7 +147,7 @@
          logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
    ```
 
-   
+
 
 5. 添加mapper、model相关文件代码【看mybatisplus文档示例：[简介 | MyBatis-Plus (baomidou.com)](https://baomidou.com/pages/24112f/)】
 
@@ -166,7 +166,7 @@
    public interface UserMapper extends BaseMapper<User> {}
    ```
 
-   
+
 
 6. SpringBoot的启动类`Application.java`添加 @MapperScan注解
 
@@ -219,7 +219,7 @@
 
    @RunWith(SpringRunner.class) 表明Test测试类要使用注入的类，比如@Autowired注入的类，有了@RunWith(SpringRunner.class)这些类才能实例化到spring容器中，自动注入才能生效
 
-	如果@Test导入的是org.junit.jupiter.api.Test，则不要加；是org.junit.Test，则要加
+   如果@Test导入的是org.junit.jupiter.api.Test，则不要加；是org.junit.Test，则要加
 
 <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230904133423670.png" alt="image-20230904133423670" style="zoom: 50%;" />
 
@@ -237,18 +237,18 @@
 2. 规整项目目录，like this
    <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230918201827407.png" alt="image-20230918201827407" style="zoom:67%;" />
 
-3. 自动生成器 
+3. 自动生成器
    1. 右键单个表，选择MybatisX-Generator，再点击一些配置
       ![image-20230918202146920](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230918202146920.png)
    2. 会生成domain、mapper、service，生成的代码会在gengerator文件夹里面，移进相应的包里面就行，注意mapper.xml的type路径需要改
-      
+
 
 4. 写测试类
    1. 创建测试：把光标放在Uservice上，按下alt+enter，选择创建测试，test文件夹会多一个UserSeriveTest.java
 
    2. 编写数据：创建好了User类，放在user上，alt+enter选择Genterate all setter with default value就会调用该对象所有的set方法，并指定默认值，注意把id的set删掉，因为本来就有默认值
 
-   3. 增加断言：`Assertions.assertEquals(true, save);` 
+   3. 增加断言：`Assertions.assertEquals(true, save);`
 
       ```java
       @SpringBootTest
@@ -276,7 +276,7 @@
       }
       ```
 
-      
+
 
 5. 注册逻辑
 
@@ -417,10 +417,9 @@ public class UserController {
    1. idea自带测试工具，生成的测试在临时文件和控制台里面
    2. 感觉还挺好用的（主要是不用自己手敲url就比apifox方便( •̀ ω •́ )y
       ![image-20230910102713710](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230910102713710.png)
-      
-   
+
    3. 填入相关url和参数，注意POST和Content-Type类型
-   
+
     ```http
     POST http://localhost:8080/api/user/login
     Content-Type: application/json
@@ -430,7 +429,7 @@ public class UserController {
         "userPassword": 12345678
     }
     ```
-   
+
 6. 用户鉴权
    1. 添加`userRole`字段可以直接再用MybatisX插件生成代码
    1. 修改其他函数的相关部分
@@ -460,7 +459,7 @@ public class UserController {
 5. 写控制器函数快速填参：插件Auto filling Java call arguments，鼠标放在括号中间alt+enter（但copilot也会自动提示(●'◡'●)
    ![image-20230908103046197](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230908103046197.png)
 6. `@Data`注解作用：简化一般实体类的get, set, toString，construct（构造函数）等的书写，简洁化代码。@Data≈@Getter + @Setter + toString() + equals等方法
-6. ctrl+B 快速进入，shift+f6重构
+6. ctrl+B 快速进入，fn+shift+f6重构
 6. 在serviceimpl中写好了方法，再加个@Override就可以直接拉到service中
 9. 常量可以专门放在一个包里面（如果是controller、service都要用的那种）
    ![image-20230910103126371](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230910103126371.png)
@@ -503,31 +502,134 @@ public class UserController {
 
 ### 后端
 
-1. 增加userLogout接口实现用户登出——removeAttrubute
+1. 增加userLogout接口实现用户登出
+
+```java
+request.getSession().removeAttribute(USER_LOGIN_STATE);
+```
+
 2. 加个星球编号字段
    1. 首先数据库加字段
    2. MybatisX重新生成
    3. 复制到model包，修改Mapper路径、service和impl、请求体都添加添加这个字段
    4. serviceimpl写业务
    5. 可能要修改测试类参数   --所以在参数多地时候就要封装，这样就不用每次多加一个参数就把所有调用地地方都改一遍
+
 3. 通用返回对象
    1. 新建common包，包下新建BaseResponse类，序列化，T类型，包含code、data、message和构造方法(fn+alt+insert)
-   2. 包下新建ResultUtil类，写个success成功返回，return new BaseResponse<> (0,data,""ok);
-   3. 把controller方法的返回值都写成BaseResponse<User>，return的话就写成 ResultUtil.success(safeUser)
+```java
+@Data
+public class BaseResponse<T> implements Serializable {
+
+    private static final long serialVersionUID = -9210065168907605627L;
+    private int code;
+    private T data;
+    private String message;
+    private String description;
+
+
+    public BaseResponse(int code, T data, String message, String description) {
+        this.code = code;
+        this.data = data;
+        this.message = message;
+        this.description = description;
+
+    }
+
+    public BaseResponse(int code, T data, String message) {
+        this.code = code;
+        this.data = data;
+        this.message = message;
+    }
+
+    public BaseResponse(ErrorCode errorCode) {
+        this(errorCode.getCode(), null, errorCode.getMessage(), errorCode.getDescription());
+    }
+}
+```
+
+
+2. 包下新建ResultUtil类，写个success成功返回
+
+```java
+public class ResultUtil {
+    public static <T> BaseResponse<T> success(T data) {
+        return new BaseResponse<>(0, data, "ok!");
+    }
+}
+```
+3. 把controller方法的返回值都写成BaseResponse<User>
+
+   ```java
+   return ResultUtil.success(result);
+   ```
+
+
+
 4. 自定义错误码
 
    1. common下新建ErrorCode类，包含code、data、message和构造方法，注意变量要加final【声明在创建了后不能被修改，确保安全性、多线程安全和缓存】
+
    2. 定义一些常见错误枚举常量，生成get方法【注意这里不能直接加data注解，因为这是枚举类，枚举常量是有限的，每个常量都有不同的属性值，而不是通过字段赋值的方式来定义，data注解不能自动识别枚举类中的属性】
-   3. BaseResponce添加构造函数（ErrorCode），ResultUtil添加error失败返回
-   4. 修改controller的返回类，所有的 renturn null写成throw new BusinessException(ErrorCode.枚举类)
-   5. 让前端也显示我们的错误码：全局异常处理器
+
+      ```java
+      SUCCESS(0, "OK", ""),
+      PARAM_ERROR(40000, "请求参数错误", ""),
+      NULL_ERROR(40001, "请求参数为空", ""),
+      NOT_LOGIN(40100, "未登录", ""),
+      NOT_AUTH(40300, "无权限", ""),
+      DUP_INFO(40400, "信息重复", ""),
+      ```
+
+
+
+3. BaseResponce添加构造函数（ErrorCode），ResultUtil添加error失败返回
+
+4. 修改controller的返回类，所有的 renturn null写成throw new BusinessException(ErrorCode.枚举类)
+
+5. 让前端也显示我们的错误码：全局异常处理器
 
 
 5. 封装全局异常处理
    1. ErrorCode添加一个系统内部异常的状态码
-   3. 新建exception包，包下新建BusinessException类，序列化、final定义code，description、构造函数（写多几个，因为不确定到时候调用会给什么参数）、get方法
-   3. exception包新建GlobalExceptionHandler类
-    ```java
+
+      ```java
+      SYSTEM_ERROR(50000, "系统错误", "");
+      ```
+
+   2. 新建exception包，包下新建BusinessException类，序列化、final定义code，description、构造函数（写多几个，因为不确定到时候调用会给什么参数）、get方法
+
+```java
+@Getter
+public class BusinessException extends RuntimeException {
+    private static final long serialVersionUID = 1449280272362390847L;
+    private final int code;
+    private final String description;
+
+    public BusinessException(String message, int code, String description) {
+        super(message);
+        this.code = code;
+        this.description = description;
+    }
+
+    public BusinessException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.code = errorCode.getCode();
+        this.description = errorCode.getDescription();
+    }
+
+    public BusinessException(ErrorCode errorCode, String description) {
+        super(errorCode.getMessage());
+        this.code = errorCode.getCode();
+        this.description = description;
+    }
+
+}
+
+```
+
+3. exception包新建GlobalExceptionHandler类
+```java
    @RestControllerAdvice
    @Slf4j
    public class GlobalExceptionHandler {
@@ -536,35 +638,33 @@ public class UserController {
            log.info("BusinessException：{}", e.getMessage());
            return ResultUtil.error(e.getCode(), e.getMessage(), e.getDescription());
        }
-   
+
        @ExceptionHandler(RuntimeException.class)
        public BaseResponse handleException(BusinessException e) {
            log.info("RuntimeException：{}", e.getMessage());
            return ResultUtil.error(ErrrCode.SYSTEM_ERROR, e.getMessage(), "");
        }
    }
-   
-    ```
+```
 
 6. 测试一下，在未登录状态输入http://localhost:8000/admin/user-manage?current=1&pageSize=5
-   
+
    前端返回40010![image-20230915172223451](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230915172223451.png)
    后端返回
    ![image-20230915172851922](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230915172851922.png)
    就搞定了！
-   
+
 6. 总结34的关系
-   
+
    1. 首先为什么要通用返回对象BaseResponce，一般对数据返回格式都会有个同意的要求（data），再加上状态码（code）、信息（message，具体描述返回结果）
    1. 其次一般就是success和error两种结果，所以我们再封装一次，建个ResultUtil类，以后调用的话就直接ResultUtil.error(xxxx)
    1. 那error会有很多种情况，所以我们在定义一个ErrorCode专门枚举错误码
-   
+
 8. 总结34和5的关系
 
-
-         1. 为什么要封装全局异常变量
-            主要目的是提高代码的可维护性、可读性和可扩展性
-            把所有的异常信息集中在一个地方ErrorCode中，可以更好地管理和维护异常信息，这样报错的话就可以很容易找到是哪里出了问题，也可以比较方便地对异常信息进行修改，而不是在代码中到处跳来跳去
+   1. 为什么要封装全局异常处理
+      主要目的是提高代码的可维护性、可读性和可扩展性
+      把所有的异常信息集中在一个地方ErrorCode中，可以更好地管理和维护异常信息，这样报错的话就可以很容易找到是哪里出了问题，也可以比较方便地对异常信息进行修改，而不是在代码中到处跳来跳去
 
    2. `ErrorCode`定义错误码  -->`ResultUtil` 利用`BaseResponce`生成响应对象  --> `BusinessException` 用于标识业务异常  -->   `GlobalExceptionHandler` 用于捕获和处理这些异常并返回适当的响应
 
@@ -595,7 +695,7 @@ dev运行
 bulid之后会出现如下文件大小分析，以后优化性能可以从这方面入手【等以后多学了点前端再说吧(●'◡'●)】
 <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230917215929581.png" alt="image-20230917215929581" style="zoom:50%;" />
 
-使用serve跑3000端口显示错误，奇怪捏🧐 
+使用serve跑3000端口显示错误，奇怪捏🧐
 <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230917200451644.png" alt="image-20230917200451644" style="zoom:50%;" />
 
 0.0因为跑错文件夹了，终端应该是在dist文件夹下运行serve
@@ -604,21 +704,29 @@ bulid之后会出现如下文件大小分析，以后优化性能可以从这方
 ### 后端多环境运行
 
 1. 后端多环境主要是改：
-   1. 依赖的环境地址 
-   2. 数据库地址 
-   3. 缓存地址 
-   4. 消息队列地址 
-   5. 项目端口号 
-   6. 服务器配置 
+   1. 依赖的环境地址
+   2. 数据库地址
+   3. 缓存地址
+   4. 消息队列地址
+   5. 项目端口号
+   6. 服务器配置
 
-哇后面的好像没有服务器就实操不了了，这个双十一一定去搞一台来(；′⌒`)
+**哇后面的好像没有服务器就实操不了了，这个双十一一定去搞一台来(；′⌒`)**
 
-## 第七节 上线【TODO】
+## 第七节：上线【TODO】
+
+## 待补充
+
+1. 增加一些crud
+2. 项目登录改为分布式 session（单点登录 - redis）
+3.  后台添加全局请求拦截器（统一去判断用户权限、统一记录请求日志）
 
 ## 没解决的问题  --都已解决
 
 1. umi没有数据怎么回事  ——网络问题，因为他这个是从github上拉下来的【但有时候连了梯子也没有诶？奇怪🧐】
-   <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230903232604121.png" alt="image-20230903232604121" style="zoom:50%;" />
+   <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230903232604121.png" alt="image-20230903232604121" style="zoom: 33%;" />
+
+
 
 2. idea文件夹只有md文件，同时项目结构的模块没有内容，添加整个项目文件为模块不成功
    <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230904122212508-16938013373501.png" alt="image-20230904122212508-16938013373501" style="zoom: 50%;" />
@@ -628,6 +736,8 @@ bulid之后会出现如下文件大小分析，以后优化性能可以从这方
 
    在项目结构的模块只添加后端文佳加为模块，成功，【项目】也显示
    <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230904133205100-16938055287873.png" alt="image-20230904133205100-16938055287873" style="zoom:67%;" />
+
+
 
 3. @Slf4j怎么用
 
@@ -641,9 +751,11 @@ bulid之后会出现如下文件大小分析，以后优化性能可以从这方
    log.trace("追踪，具体还不太明白");
    ```
 
-   
-
 4. 为什么要Serializable序列化：将对象的状态转换为字节流和其他数据格式的过程，以便将其保存到文件、传输到网络或不同系统之前进行交互---》数据持久化、跨平台、安全性
    <img src="https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230910101716098.png" alt="image-20230910101716098" style="zoom: 67%;" />
 
+
+
 5. 前端用户名不显示【显示为无名】
+   这个地方把username改成userName（虽然会报错但是可以就正常显示了
+   ![image-20230919150953463](https://cdn.jsdelivr.net/gh/kixuan/PicGo/images/image-20230919150953463.png)
