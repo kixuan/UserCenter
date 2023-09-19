@@ -2,7 +2,7 @@ package com.example.usercenterbackend;
 
 import com.example.usercenterbackend.Mapper.UserMapper;
 import com.example.usercenterbackend.model.domain.User;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -20,7 +20,7 @@ public class SampleTest {
     public void testSelect() {
         System.out.println(("----- selectAll method test ------"));
         List<User> userList = userMapper.selectList(null);
-        Assert.assertEquals(1, userList.size());
+        Assertions.assertEquals(1, userList.size());
         userList.forEach(System.out::println);
     }
 

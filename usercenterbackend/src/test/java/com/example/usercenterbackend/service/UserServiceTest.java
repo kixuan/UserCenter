@@ -1,6 +1,7 @@
 package com.example.usercenterbackend.service;
 
 import com.example.usercenterbackend.model.domain.User;
+import com.example.usercenterbackend.model.domain.UserRegisterParam;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,39 +33,41 @@ class UserServiceTest {
 
     @Test
     void userRegister() {
-        // TODO 还是要把字段封装一下，不然加一个字段好多地方都要改，封装成param的话就可以只改一个地方
-        String userAccount = "yupi";
-        String userPassword = "";
-        String checkPassword = "123456";
-        String planetCode = "12345";
-        long result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        // 还是要把字段封装一下，不然加一个字段好多地方都要改，封装成param的话就可以只改一个地方
+        UserRegisterParam userRegisterParam = new UserRegisterParam();
+        userRegisterParam.setUserAccount("yupi");
+        userRegisterParam.setUserPassword("123456");
+        userRegisterParam.setCheckPassword("123456");
+        userRegisterParam.setPlanetCode("1234");
+
+        long result = userService.userRegister(userRegisterParam);
         Assertions.assertEquals(-1, result);
 
-        userAccount = "yu";
-        result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        userRegisterParam.setUserAccount("yu");
+        result = userService.userRegister(userRegisterParam);
         Assertions.assertEquals(-1, result);
 
-        userAccount = "yupi";
-        userPassword = "123456";
-        result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        userRegisterParam.setUserAccount("yupi");
+        userRegisterParam.setUserPassword("123456");
+        result = userService.userRegister(userRegisterParam);
         Assertions.assertEquals(-1, result);
 
-        userAccount = "yu pi";
-        userPassword = "12345678";
-        result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        userRegisterParam.setUserAccount("yu pi");
+        userRegisterParam.setUserPassword("12345678");
+        result = userService.userRegister(userRegisterParam);
         Assertions.assertEquals(-1, result);
 
-        checkPassword = "123456789";
-        result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        userRegisterParam.setCheckPassword("123456789");
+        result = userService.userRegister(userRegisterParam);
         Assertions.assertEquals(-1, result);
 
-        userAccount = "dogyupi";
-        checkPassword = "12345678";
-        result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        userRegisterParam.setUserAccount("dogyupi");
+        userRegisterParam.setCheckPassword("12345678");
+        result = userService.userRegister(userRegisterParam);
         Assertions.assertEquals(-1, result);
 
-        userAccount = "yupi";
-        result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        userRegisterParam.setUserAccount("yupi");
+        result = userService.userRegister(userRegisterParam);
         Assertions.assertTrue(result > 0);
     }
 }

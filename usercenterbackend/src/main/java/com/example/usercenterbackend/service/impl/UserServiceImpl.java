@@ -6,6 +6,8 @@ import com.example.usercenterbackend.Mapper.UserMapper;
 import com.example.usercenterbackend.common.ErrorCode;
 import com.example.usercenterbackend.exception.BusinessException;
 import com.example.usercenterbackend.model.domain.User;
+import com.example.usercenterbackend.model.domain.UserLoginParam;
+import com.example.usercenterbackend.model.domain.UserRegisterParam;
 import com.example.usercenterbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,55 +34,55 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserMapper userMapper;
-    private final String SALT = "kixuan";
+    private final String SALT = "MYGO";
 
     @Override
-    public Long userRegister(String userAccount, String userPassword, String checkPassword, String planetCode) {
+    public Long userRegister(UserRegisterParam userRegisterParam) {
         // 1.校验用户的账户、密码、校验密码，是否符合要求
         // 1.1.非空校验
         // 1.2. 账户长度不小于4位
-        // 1.3. 密码就不小于8位
+        // 1.3. 密码就不小于5位
         // 1.4  星球账号不能大于5位
-        if ((StringUtils.isAnyBlank(userAccount, userPassword, checkPassword))
-                || (userAccount.length() < 4)
-                || (userPassword.length() < 8)
-                || (planetCode.length() > 5)) {
+        if ((StringUtils.isAnyBlank(userRegisterParam.getUserAccount(), userRegisterParam.getUserPassword(), userRegisterParam.getCheckPassword()))
+                || (userRegisterParam.getUserAccount().length() < 4)
+                || (userRegisterParam.getUserPassword().length() < 5)
+                || (userRegisterParam.getPlanetCode().length() > 5)) {
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
 
         // 1.5 账户不包含特殊字符
         String validRule = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%…… &*（）——+|{}【】‘；：”“’。，、？]";
-        Matcher matcher = Pattern.compile(validRule).matcher(userAccount);
+        Matcher matcher = Pattern.compile(validRule).matcher(userRegisterParam.getUserAccount());
         // 如果包含非法字符，则返回
         if (matcher.find()) {
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 1.6 密码和校验密码相同
-        if (!userPassword.equals(checkPassword)) {
+        if (!userRegisterParam.getUserPassword().equals((userRegisterParam.getCheckPassword()))) {
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 1.7 账户不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userAccount", userRegisterParam.getUserAccount());
         Long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
             throw new BusinessException(ErrorCode.DUP_INFO);
         }
         // 1.8 星球账号不能重复
         queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("planetCode", planetCode);
+        queryWrapper.eq("planetCode", (userRegisterParam.getPlanetCode()));
         count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
             throw new BusinessException(ErrorCode.DUP_INFO);
         }
         // 2.对密码进行加密（密码千万不要直接以明文存储到数据库中）
-        String verifyPassword = DigestUtils.md5DigestAsHex((SALT + userPassword)
+        String verifyPassword = DigestUtils.md5DigestAsHex((SALT + userRegisterParam.getUserPassword())
                 .getBytes(StandardCharsets.UTF_8));
         // 3. 向数据库插入用户数据
         User user = new User();
-        user.setUserAccount(userAccount);
+        user.setUserAccount(userRegisterParam.getUserAccount());
         user.setUserPassword(verifyPassword);
-        user.setPlanetCode(planetCode);
+        user.setPlanetCode(userRegisterParam.getPlanetCode());
         int res = userMapper.insert(user);
         if (res < 0) {
             throw new BusinessException(ErrorCode.PARAM_ERROR);
@@ -90,41 +92,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 用户登录
-     *
-     * @param userAccount
-     * @param userPassword
-     * @param request
+     * @param userLoginParam
      * @return
      */
     @Override
-    // TODO 改成只有一个param
     // request为了拿到session，记录用户的登录状态
-    public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public User userLogin(UserLoginParam userLoginParam) {
         // 1.校验
-        if ((StringUtils.isAnyBlank(userAccount, userPassword))
-                || (userAccount.length() < 4)
-                || (userPassword.length() < 8)) {
+        if ((StringUtils.isAnyBlank(userLoginParam.getUserAccount(), userLoginParam.getUserPassword()))
+                || (userLoginParam.getUserAccount().length() < 4)
+                || (userLoginParam.getUserPassword().length() < 5)) {
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
 
         // 账户不能包含特殊字符
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
-        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
+        Matcher matcher = Pattern.compile(validPattern).matcher(userLoginParam.getUserAccount());
         if (matcher.find()) {
             throw new BusinessException(ErrorCode.PARAM_ERROR);
         }
         // 2.加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword)
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userLoginParam.getUserPassword())
                 .getBytes(StandardCharsets.UTF_8));
         // 查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userAccount", userLoginParam.getUserAccount());
         queryWrapper.eq("userPassword", encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         // 用户不存在
         if (user == null) {
             log.info("user login failed, userAccount Cannot match userPassword");
-            throw new BusinessException(ErrorCode.PARAM_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         // 3.用户脱敏
         User safetyUser = getSafetyUser(user);
@@ -132,7 +130,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 4.记录用户的登录状态
         // 拿到session，再用setAttribute往session里面放一些值
         // map类型，存储键值对，给用户的登录状态分配一个键
-        request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
+        userLoginParam.getRequest().getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
         return user;
     }
 
@@ -145,7 +143,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getSafetyUser(User originUser) {
         if (originUser == null) {
-            throw new BusinessException(ErrorCode.PARAM_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         User safetyUser = new User();
         // password和isDelete不返回给前端
@@ -153,6 +151,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safetyUser.setUserName(originUser.getUserName());
         safetyUser.setUserAccount(originUser.getUserAccount());
         safetyUser.setAvatarUrl(originUser.getAvatarUrl());
+        safetyUser.setDescription(originUser.getDescription());
+        safetyUser.setFans(originUser.getFans());
         safetyUser.setGender(originUser.getGender());
         safetyUser.setEmail(originUser.getEmail());
         safetyUser.setUserStatus(originUser.getUserStatus());

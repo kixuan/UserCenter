@@ -6,6 +6,8 @@ import com.example.usercenterbackend.common.ErrorCode;
 import com.example.usercenterbackend.common.ResultUtil;
 import com.example.usercenterbackend.exception.BusinessException;
 import com.example.usercenterbackend.model.domain.User;
+import com.example.usercenterbackend.model.domain.UserLoginParam;
+import com.example.usercenterbackend.model.domain.UserRegisterParam;
 import com.example.usercenterbackend.model.domain.request.UserLoginRequest;
 import com.example.usercenterbackend.model.domain.request.UserRegisterRequest;
 import com.example.usercenterbackend.service.UserService;
@@ -38,14 +40,16 @@ public class UserController {
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         // todo 这个也好麻烦o，cszc都是直接用beanutils复制过去的
-        String userAccount = userRegisterRequest.getUserAccount();
-        String userPassword = userRegisterRequest.getUserPassword();
-        String checkPassword = userRegisterRequest.getCheckPassword();
-        String planetCode = userRegisterRequest.getPlanetCode();
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, planetCode)) {
+        UserRegisterParam userRegisterParam = new UserRegisterParam();
+        userRegisterParam.setUserAccount(userRegisterRequest.getUserAccount());
+        userRegisterParam.setUserPassword(userRegisterRequest.getUserPassword());
+        userRegisterParam.setCheckPassword(userRegisterRequest.getCheckPassword());
+        userRegisterParam.setPlanetCode(userRegisterRequest.getPlanetCode());
+
+        if (StringUtils.isAnyBlank(userRegisterParam.getUserAccount(), userRegisterParam.getUserPassword(), userRegisterParam.getCheckPassword(), userRegisterParam.getPlanetCode())) {
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
-        long result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
+        long result = userService.userRegister(userRegisterParam);
         return ResultUtil.success(result);
     }
 
@@ -54,14 +58,16 @@ public class UserController {
     // @RequestBody接收前端传递给后端的json字符串中的数据
     public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
-            throw new BusinessException(ErrorCode.PARAM_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
-        String userAccount = userLoginRequest.getUserAccount();
-        String userPassword = userLoginRequest.getUserPassword();
-        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
+        UserLoginParam userLoginParam = new UserLoginParam();
+        userLoginParam.setUserAccount(userLoginRequest.getUserAccount());
+        userLoginParam.setUserPassword(userLoginRequest.getUserPassword());
+        userLoginParam.setRequest(request);
+        if (StringUtils.isAnyBlank(userLoginParam.getUserAccount(), userLoginParam.getUserPassword())) {
             return null;
         }
-        User user = userService.userLogin(userAccount, userPassword, request);
+        User user = userService.userLogin(userLoginParam);
         return ResultUtil.success(user);
     }
 
@@ -78,6 +84,18 @@ public class UserController {
         User user = userService.getById(userId);
         User safetyUser = userService.getSafetyUser(user);
         return ResultUtil.success(safetyUser);
+    }
+
+    @GetMapping("/list")
+    public BaseResponse<List<User>> getUsersList(HttpServletRequest request) {
+        if (!isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NOT_AUTH);
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("isDelete", 0);
+        List<User> userList = userService.list(queryWrapper);
+        List<User> searchList = userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+        return ResultUtil.success(searchList);
     }
 
 
